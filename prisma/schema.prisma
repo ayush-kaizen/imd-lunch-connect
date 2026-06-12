@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id                      String    @id @default(uuid())
+  email                   String    @unique
+  firstName               String
+  lastName                String
+  role                    String    @default("MBA_STUDENT") // FACULTY, STAFF, MBA_STUDENT
+  title                   String?
+  department              String?
+  bio                     String?
+  pastExperience          String?
+  currentlyReading        String?
+  researchWork            String?
+  funFact                 String?
+  profilePhotoUrl         String?
+  isRouletteOptedIn       Boolean   @default(false)
+  isAvailableToday        Boolean   @default(false)
+  availableTodayExpiresAt DateTime?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  interests        UserInterestTag[]
+  slotsAsHost      Slot[]            @relation("HostSlots")
+  bookingsAsHost   Booking[]         @relation("HostBookings")
+  bookingsAsBooker Booking[]         @relation("BookerBookings")
+  rouletteAsUser1  RouletteMatch[]   @relation("RouletteUser1")
+  rouletteAsUser2  RouletteMatch[]   @relation("RouletteUser2")
+  notifications    Notification[]
+}
+
+model UserInterestTag {
+  id       String  @id @default(uuid())
+  userId   String
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tag      String
+  isCustom Boolean @default(false)
+
+  @@unique([userId, tag])
+}
+
+model Slot {
+  id              String   @id @default(uuid())
+  hostId          String
+  host            User     @relation("HostSlots", fields: [hostId], references: [id], onDelete: Cascade)
+  date            DateTime
+  startTime       String   // "12:00"
+  endTime         String   // "13:00"
+  durationMinutes Int      @default(60)
+  type            String   @default("LUNCH") // LUNCH, COFFEE_CHAT
+  isBooked        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  booking Booking?
+}
+
+model Booking {
+  id                 String    @id @default(uuid())
+  slotId             String    @unique
+  slot               Slot      @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  bookerId           String
+  booker             User      @relation("BookerBookings", fields: [bookerId], references: [id])
+  hostId             String
+  host               User      @relation("HostBookings", fields: [hostId], references: [id])
+  boothNumber        Int       // 1-5
+  bookerTalkingPoints String?
+  status             String    @default("CONFIRMED") // CONFIRMED, CANCELLED
+  cancelledBy        String?
+  cancelledAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model RouletteMatch {
+  id            String   @id @default(uuid())
+  user1Id       String
+  user1         User     @relation("RouletteUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2Id       String
+  user2         User     @relation("RouletteUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+  matchedSlotId String?
+  boothNumber   Int?
+  weekOf        DateTime
+  user1Status   String   @default("PENDING") // PENDING, ACCEPTED, DECLINED
+  user2Status   String   @default("PENDING")
+  status        String   @default("PENDING") // PENDING, CONFIRMED, DECLINED, EXPIRED
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Notification {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              String   // BOOKING_CONFIRMED, BOOKING_CANCELLED, BOOKING_REMINDER, ROULETTE_MATCH
+  title             String
+  message           String
+  relatedBookingId  String?
+  relatedRouletteId String?
+  isRead            Boolean  @default(false)
+  createdAt         DateTime @default(now())
+}

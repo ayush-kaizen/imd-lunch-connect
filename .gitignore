@@ -1,0 +1,6 @@
+node_modules/
+.next/
+prisma/dev.db
+.env.local
+.env
+mockups.tar.gz

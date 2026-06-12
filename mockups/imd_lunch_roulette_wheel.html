@@ -1,0 +1,175 @@
+
+<h2 class="sr-only">IMD Lunch Connect lunch roulette with interactive spinning wheel</h2>
+<style>
+.rw-wrap{padding:.5rem 0}
+.rw-hdr{display:flex;align-items:center;padding:12px 16px;background:#00205B;border-radius:var(--border-radius-lg) var(--border-radius-lg) 0 0}
+.rw-hdr-logo{background:#fff;border-radius:4px;padding:2px 6px;color:#00205B;font-weight:500;font-size:11px;letter-spacing:1px}
+.rw-hdr-t{color:#fff;font-size:15px;font-weight:500;margin-left:10px}
+.rw-body{border:0.5px solid var(--color-border-tertiary);border-top:none;border-radius:0 0 var(--border-radius-lg) var(--border-radius-lg);background:var(--color-background-secondary);padding:24px;overflow:hidden}
+.rw-title{font-size:18px;font-weight:500;margin:0 0 4px}
+.rw-sub{font-size:13px;color:var(--color-text-secondary);margin:0 0 20px}
+.rw-center{display:flex;flex-direction:column;align-items:center;margin-bottom:24px}
+.rw-wheel-box{position:relative;width:300px;height:300px;margin-bottom:16px}
+.rw-pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:20px solid #00205B;z-index:10;filter:none}
+.rw-canvas{width:300px;height:300px}
+.rw-spin-btn{background:#00205B;color:#fff;border:none;padding:12px 32px;border-radius:var(--border-radius-md);font-size:14px;font-weight:500;cursor:pointer;transition:opacity .2s}
+.rw-spin-btn:disabled{opacity:.5;cursor:not-allowed}
+.rw-result{display:none;background:var(--color-background-primary);border:2px solid #00205B;border-radius:var(--border-radius-lg);padding:20px;width:100%;max-width:460px;margin:0 auto;text-align:center}
+.rw-result.show{display:block;animation:rw-fade .5s ease}
+@keyframes rw-fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.rw-avatars{display:flex;align-items:center;justify-content:center;gap:0;margin:16px 0 12px}
+.rw-av{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:16px;border:2px solid var(--color-background-primary)}
+.rw-match-name{font-size:16px;font-weight:500;margin:0 0 2px}
+.rw-match-role{font-size:12px;color:var(--color-text-secondary);margin:0 0 10px}
+.rw-tags{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
+.rw-tag{font-size:10px;padding:2px 8px;background:rgba(0,32,91,.06);border-radius:10px;color:var(--color-text-secondary)}
+.rw-slot{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:12px}
+.rw-slot-t{font-size:13px;color:var(--color-text-secondary);margin:0}
+.rw-slot-t b{font-weight:500;color:var(--color-text-primary)}
+.rw-actions{display:flex;gap:8px;justify-content:center}
+.rw-accept{background:#00205B;color:#fff;border:none;padding:8px 24px;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer}
+.rw-decline{padding:8px 20px;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer}
+</style>
+<div class="rw-wrap">
+  <div class="rw-hdr"><span class="rw-hdr-logo">IMD</span><span class="rw-hdr-t">Lunch Connect</span></div>
+  <div class="rw-body">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <p class="rw-title"><i class="ti ti-arrows-shuffle" style="font-size:20px;vertical-align:-3px;color:#00205B;margin-right:4px" aria-hidden="true"></i>Lunch roulette</p>
+      <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:var(--color-text-secondary)">Opted in</span><div style="width:36px;height:20px;background:#00205B;border-radius:10px;position:relative"><div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:2px;right:2px"></div></div></div>
+    </div>
+    <p class="rw-sub">Spin the wheel to discover your lunch match for this week</p>
+    <div class="rw-center">
+      <div class="rw-wheel-box">
+        <div class="rw-pointer"></div>
+        <canvas class="rw-canvas" id="rwCanvas" width="300" height="300"></canvas>
+      </div>
+      <button class="rw-spin-btn" id="spinBtn" onclick="spinWheel()"><i class="ti ti-arrows-shuffle" style="font-size:15px;vertical-align:-2px;margin-right:6px" aria-hidden="true"></i>Spin the roulette</button>
+    </div>
+    <div class="rw-result" id="result">
+      <span style="font-size:11px;padding:3px 10px;background:#00205B;color:#fff;border-radius:20px">This week's match</span>
+      <div class="rw-avatars">
+        <div class="rw-av" style="background:#FAEEDA;color:#633806;z-index:1">AB</div>
+        <div class="rw-av" id="matchAv" style="background:#EEEDFE;color:#3C3489;margin-left:-12px">??</div>
+      </div>
+      <p class="rw-match-name">You & <span id="matchName">—</span></p>
+      <p class="rw-match-role" id="matchRole"></p>
+      <div class="rw-tags" id="matchTags"></div>
+      <div class="rw-slot">
+        <i class="ti ti-calendar" style="font-size:15px;color:#00205B" aria-hidden="true"></i>
+        <p class="rw-slot-t" id="matchSlot"></p>
+      </div>
+      <div class="rw-actions">
+        <button class="rw-accept"><i class="ti ti-check" style="font-size:14px;vertical-align:-2px;margin-right:4px" aria-hidden="true"></i>Accept</button>
+        <button class="rw-decline">Decline</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var people=[
+{name:"Julia Binder",init:"JB",role:"Professor of Business Transformation",tags:["Sustainability","Innovation","Leadership"],bg:"#EEEDFE",fg:"#3C3489",day:"Wed 18 Jun, 12:45",booth:"Booth 2"},
+{name:"David Bach",init:"DB",role:"President & Professor of Strategy",tags:["Strategy","Geopolitics","Leadership"],bg:"#E6F1FB",fg:"#0C447C",day:"Thu 19 Jun, 11:45",booth:"Booth 1"},
+{name:"Howard Yu",init:"HY",role:"Professor of Management & Innovation",tags:["Innovation","AI & Digital","Future Readiness"],bg:"#E1F5EE",fg:"#085041",day:"Mon 16 Jun, 12:45",booth:"Booth 3"},
+{name:"Öykü Işık",init:"OI",role:"Professor of Digital Strategy",tags:["AI & Digital","Cybersecurity"],bg:"#FBEAF0",fg:"#72243E",day:"Tue 17 Jun, 11:45",booth:"Booth 4"},
+{name:"Sophie Bacq",init:"SB",role:"Professor of Social Entrepreneurship",tags:["Entrepreneurship","Sustainability"],bg:"#E1F5EE",fg:"#085041",day:"Wed 18 Jun, 12:45",booth:"Booth 5"},
+{name:"Anand Narasimhan",init:"AN",role:"Professor of Leadership & Governance",tags:["Leadership","Governance"],bg:"#FAEEDA",fg:"#633806",day:"Thu 19 Jun, 12:45",booth:"Booth 2"},
+{name:"Stefan Michel",init:"SM",role:"Dean of Faculty & Research",tags:["Marketing","Innovation","Strategy"],bg:"#FAECE7",fg:"#712B13",day:"Mon 16 Jun, 11:45",booth:"Booth 1"},
+{name:"Mark Greeven",init:"MG",role:"Professor of Management Innovation",tags:["Innovation","China","Strategy"],bg:"#FBEAF0",fg:"#72243E",day:"Tue 17 Jun, 12:45",booth:"Booth 3"}
+];
+var fills=["#00205B","#185FA5","#0F6E56","#534AB7","#993C1D","#00205B","#185FA5","#0F6E56"];
+var canvas=document.getElementById("rwCanvas");
+var ctx=canvas.getContext("2d");
+var n=people.length;
+var arc=2*Math.PI/n;
+var angle=0;
+var spinning=false;
+function drawWheel(a){
+  ctx.clearRect(0,0,300,300);
+  ctx.save();
+  ctx.translate(150,150);
+  ctx.rotate(a);
+  for(var i=0;i<n;i++){
+    var sa=i*arc;
+    var ea=sa+arc;
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.arc(0,0,145,sa,ea);
+    ctx.closePath();
+    ctx.fillStyle=fills[i%fills.length];
+    ctx.fill();
+    ctx.strokeStyle="rgba(255,255,255,0.3)";
+    ctx.lineWidth=1;
+    ctx.stroke();
+    ctx.save();
+    ctx.rotate(sa+arc/2);
+    ctx.translate(80,0);
+    ctx.rotate(Math.PI/2);
+    ctx.fillStyle="#fff";
+    ctx.font="500 12px sans-serif";
+    ctx.textAlign="center";
+    var nm=people[i].name.split(" ");
+    ctx.fillText(nm[0],-0,-4);
+    ctx.font="400 10px sans-serif";
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.fillText(nm[1]||"",0,10);
+    ctx.restore();
+  }
+  ctx.beginPath();
+  ctx.arc(0,0,28,0,2*Math.PI);
+  ctx.fillStyle="#fff";
+  ctx.fill();
+  ctx.strokeStyle="var(--color-border-tertiary)";
+  ctx.lineWidth=0.5;
+  ctx.stroke();
+  ctx.fillStyle="#00205B";
+  ctx.font="500 9px sans-serif";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.fillText("IMD",0,0);
+  ctx.restore();
+}
+drawWheel(0);
+function spinWheel(){
+  if(spinning)return;
+  spinning=true;
+  document.getElementById("spinBtn").disabled=true;
+  document.getElementById("result").classList.remove("show");
+  document.getElementById("result").style.display="none";
+  var winner=Math.floor(Math.random()*n);
+  var targetAngle=(2*Math.PI)-(winner*arc+arc/2)+Math.PI/2;
+  var totalSpin=targetAngle+2*Math.PI*6;
+  var start=null;
+  var duration=4000;
+  var startAngle=angle;
+  function ease(t){return 1-Math.pow(1-t,4)}
+  function anim(ts){
+    if(!start)start=ts;
+    var p=Math.min((ts-start)/duration,1);
+    angle=startAngle+totalSpin*ease(p);
+    drawWheel(angle);
+    if(p<1){requestAnimationFrame(anim)}
+    else{
+      spinning=false;
+      document.getElementById("spinBtn").disabled=false;
+      showResult(winner);
+    }
+  }
+  requestAnimationFrame(anim);
+}
+function showResult(idx){
+  var p=people[idx];
+  document.getElementById("matchName").textContent=p.name;
+  document.getElementById("matchRole").textContent=p.role;
+  var av=document.getElementById("matchAv");
+  av.textContent=p.init;
+  av.style.background=p.bg;
+  av.style.color=p.fg;
+  var tags=document.getElementById("matchTags");
+  tags.innerHTML="";
+  p.tags.forEach(function(t){var s=document.createElement("span");s.className="rw-tag";s.textContent=t;tags.appendChild(s)});
+  document.getElementById("matchSlot").innerHTML="<b>"+p.day+"</b> · "+p.booth+" · The Hub";
+  var r=document.getElementById("result");
+  r.style.display="block";
+  setTimeout(function(){r.classList.add("show")},20);
+}
+</script>

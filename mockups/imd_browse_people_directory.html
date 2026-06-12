@@ -1,0 +1,128 @@
+
+<h2 class="sr-only">IMD Lunch Connect browse people screen with search, filters, and faculty cards</h2>
+<div style="padding: 0.5rem 0;">
+  <div style="display: flex; align-items: center; padding: 12px 16px; background: #00205B; border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="background: #fff; border-radius: 4px; padding: 2px 6px;"><span style="color: #00205B; font-weight: 500; font-size: 11px; letter-spacing: 1px;">IMD</span></div>
+      <span style="color: #fff; font-size: 15px; font-weight: 500;">Lunch Connect</span>
+    </div>
+  </div>
+  <div style="border: 0.5px solid var(--color-border-tertiary); border-top: none; border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg); overflow: hidden;">
+    <div style="padding: 20px 24px; background: var(--color-background-secondary);">
+      <p style="font-size: 18px; font-weight: 500; margin: 0 0 4px;">Browse people</p>
+      <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0 0 16px;">Find someone to meet over lunch or coffee</p>
+      <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+        <div style="flex: 1; position: relative;">
+          <i class="ti ti-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--color-text-tertiary);" aria-hidden="true"></i>
+          <input type="text" placeholder="Search by name..." style="width: 100%; box-sizing: border-box; padding-left: 32px;" />
+        </div>
+      </div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;">
+        <span style="font-size: 12px; color: var(--color-text-secondary); padding: 5px 0; margin-right: 4px;">Role:</span>
+        <button style="font-size: 12px; padding: 4px 12px; background: #00205B; color: #fff; border: none; border-radius: 20px;">All</button>
+        <button style="font-size: 12px; padding: 4px 12px; border-radius: 20px;">Faculty</button>
+        <button style="font-size: 12px; padding: 4px 12px; border-radius: 20px;">Staff</button>
+        <button style="font-size: 12px; padding: 4px 12px; border-radius: 20px;">MBA student</button>
+        <div style="width: 0.5px; background: var(--color-border-tertiary); margin: 0 4px;"></div>
+        <button style="font-size: 12px; padding: 4px 12px; border-radius: 20px; background: #E1F5EE; color: #085041; border-color: #5DCAA5;"><i class="ti ti-bolt" style="font-size: 12px; vertical-align: -1px; margin-right: 2px;" aria-hidden="true"></i>Available today</button>
+      </div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;">
+        <span style="font-size: 12px; color: var(--color-text-secondary); padding: 5px 0; margin-right: 4px;">Interests:</span>
+        <button style="font-size: 11px; padding: 3px 10px; border-radius: 20px; background: rgba(0,32,91,0.06); border-color: rgba(0,32,91,0.15);">Leadership</button>
+        <button style="font-size: 11px; padding: 3px 10px; border-radius: 20px; background: rgba(0,32,91,0.06); border-color: rgba(0,32,91,0.15);">AI & Digital</button>
+        <button style="font-size: 11px; padding: 3px 10px; border-radius: 20px; background: rgba(0,32,91,0.06); border-color: rgba(0,32,91,0.15);">Sustainability</button>
+        <button style="font-size: 11px; padding: 3px 10px; border-radius: 20px; background: rgba(0,32,91,0.06); border-color: rgba(0,32,91,0.15);">Strategy</button>
+        <button style="font-size: 11px; padding: 3px 10px; border-radius: 20px; background: rgba(0,32,91,0.06); border-color: rgba(0,32,91,0.15);">Innovation</button>
+        <button style="font-size: 11px; padding: 3px 10px; border-radius: 20px; background: rgba(0,32,91,0.06); border-color: rgba(0,32,91,0.15);">Family Business</button>
+        <button style="font-size: 11px; padding: 3px 10px; border-radius: 20px; background: rgba(0,32,91,0.06); border-color: rgba(0,32,91,0.15);">Finance</button>
+        <button style="font-size: 11px; padding: 3px 10px; border-radius: 20px; background: rgba(0,32,91,0.06); border-color: rgba(0,32,91,0.15);">Governance</button>
+        <button style="font-size: 11px; padding: 3px 10px; border-radius: 20px;">+12 more</button>
+      </div>
+      <p style="font-size: 12px; color: var(--color-text-tertiary); margin: 0 0 12px;">Showing 19 people</p>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+        <div style="background: var(--color-background-primary); border-radius: var(--border-radius-md); padding: 14px 16px; border: 0.5px solid var(--color-border-tertiary); cursor: pointer;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: #E6F1FB; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 12px; color: #0C447C; flex-shrink: 0;">DB</div>
+            <div style="min-width: 0;">
+              <p style="font-size: 13px; font-weight: 500; margin: 0;">David Bach</p>
+              <p style="font-size: 11px; color: var(--color-text-secondary); margin: 1px 0 0;">President & Professor</p>
+            </div>
+            <div style="margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: #5DCAA5; flex-shrink: 0;" title="Available today"></div>
+          </div>
+          <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">Strategy</span>
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">Geopolitics</span>
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">Leadership</span>
+          </div>
+        </div>
+        <div style="background: var(--color-background-primary); border-radius: var(--border-radius-md); padding: 14px 16px; border: 0.5px solid var(--color-border-tertiary); cursor: pointer;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: #EEEDFE; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 12px; color: #3C3489; flex-shrink: 0;">JB</div>
+            <div style="min-width: 0;">
+              <p style="font-size: 13px; font-weight: 500; margin: 0;">Julia Binder</p>
+              <p style="font-size: 11px; color: var(--color-text-secondary); margin: 1px 0 0;">Professor, Business Transformation</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">Sustainability</span>
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">Innovation</span>
+          </div>
+        </div>
+        <div style="background: var(--color-background-primary); border-radius: var(--border-radius-md); padding: 14px 16px; border: 0.5px solid var(--color-border-tertiary); cursor: pointer;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: #E1F5EE; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 12px; color: #085041; flex-shrink: 0;">HY</div>
+            <div style="min-width: 0;">
+              <p style="font-size: 13px; font-weight: 500; margin: 0;">Howard Yu</p>
+              <p style="font-size: 11px; color: var(--color-text-secondary); margin: 1px 0 0;">Professor, Mgmt & Innovation</p>
+            </div>
+            <div style="margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: #5DCAA5; flex-shrink: 0;" title="Available today"></div>
+          </div>
+          <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">Innovation</span>
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">AI & Digital</span>
+          </div>
+        </div>
+        <div style="background: var(--color-background-primary); border-radius: var(--border-radius-md); padding: 14px 16px; border: 0.5px solid var(--color-border-tertiary); cursor: pointer;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: #FAEEDA; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 12px; color: #633806; flex-shrink: 0;">AN</div>
+            <div style="min-width: 0;">
+              <p style="font-size: 13px; font-weight: 500; margin: 0;">Anand Narasimhan</p>
+              <p style="font-size: 11px; color: var(--color-text-secondary); margin: 1px 0 0;">Professor, Leadership & Governance</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">Leadership</span>
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">Governance</span>
+          </div>
+        </div>
+        <div style="background: var(--color-background-primary); border-radius: var(--border-radius-md); padding: 14px 16px; border: 0.5px solid var(--color-border-tertiary); cursor: pointer;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: #FBEAF0; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 12px; color: #72243E; flex-shrink: 0;">OI</div>
+            <div style="min-width: 0;">
+              <p style="font-size: 13px; font-weight: 500; margin: 0;">Öykü Işık</p>
+              <p style="font-size: 11px; color: var(--color-text-secondary); margin: 1px 0 0;">Professor, Digital Strategy</p>
+            </div>
+            <div style="margin-left: auto; width: 8px; height: 8px; border-radius: 50%; background: #5DCAA5; flex-shrink: 0;" title="Available today"></div>
+          </div>
+          <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">AI & Digital</span>
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">Cybersecurity</span>
+          </div>
+        </div>
+        <div style="background: var(--color-background-primary); border-radius: var(--border-radius-md); padding: 14px 16px; border: 0.5px solid var(--color-border-tertiary); cursor: pointer;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: #FAECE7; display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 12px; color: #712B13; flex-shrink: 0;">SM</div>
+            <div style="min-width: 0;">
+              <p style="font-size: 13px; font-weight: 500; margin: 0;">Stefan Michel</p>
+              <p style="font-size: 11px; color: var(--color-text-secondary); margin: 1px 0 0;">Dean of Faculty & Research</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">Marketing</span>
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(0,32,91,0.06); border-radius: 10px; color: var(--color-text-secondary);">Innovation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
