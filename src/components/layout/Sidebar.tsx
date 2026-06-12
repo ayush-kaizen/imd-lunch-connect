@@ -39,11 +39,11 @@ import { Separator } from "@/components/ui/separator";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "My Meetings", href: "/past-meetings", icon: History },
   { name: "My Availability", href: "/availability", icon: Calendar },
   { name: "Browse People", href: "/browse", icon: Users },
   { name: "Available Today", href: "/available-today", icon: Clock },
   { name: "Lunch Roulette", href: "/roulette", icon: Sparkles },
-  { name: "Past Meetings", href: "/past-meetings", icon: History },
 ];
 
 interface UserData {
