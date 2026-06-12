@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUserId } from "@/lib/auth";
+import { BookingStatus } from "@prisma/client";
 import { differenceInHours, parse, format } from "date-fns";
 import { CANCELLATION_WINDOW_HOURS } from "@/lib/constants";
 import { notifyBookingCancelled } from "@/lib/notifications";
@@ -39,7 +40,7 @@ export async function PUT(
       );
     }
 
-    if (booking.status !== "CONFIRMED") {
+    if (booking.status !== BookingStatus.CONFIRMED) {
       return NextResponse.json(
         { error: "This booking cannot be cancelled" },
         { status: 400 }
@@ -70,7 +71,7 @@ export async function PUT(
       await tx.booking.update({
         where: { id },
         data: {
-          status: "CANCELLED",
+          status: BookingStatus.CANCELLED,
           cancelledAt: new Date(),
           cancelledBy: userId,
         },

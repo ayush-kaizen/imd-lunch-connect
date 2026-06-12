@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
 import { MAX_BOOTHS } from "./constants";
+import { BookingStatus } from "@prisma/client";
 
 /**
  * Assigns the lowest available booth number for a given date and time range.
@@ -13,7 +14,7 @@ export async function assignBooth(
   // Get all bookings for this date that overlap with the requested time
   const existingBookings = await prisma.booking.findMany({
     where: {
-      status: "CONFIRMED",
+      status: BookingStatus.CONFIRMED,
       slot: {
         date: date,
         OR: [
@@ -76,7 +77,7 @@ export async function isBoothAvailable(
   const conflictingBooking = await prisma.booking.findFirst({
     where: {
       boothNumber,
-      status: "CONFIRMED",
+      status: BookingStatus.CONFIRMED,
       slot: {
         date: date,
         OR: [

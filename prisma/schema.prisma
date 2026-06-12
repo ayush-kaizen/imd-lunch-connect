@@ -3,8 +3,45 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum Role {
+  FACULTY
+  STAFF
+  MBA_STUDENT
+}
+
+enum SlotType {
+  LUNCH
+  COFFEE_CHAT
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+enum MatchStatus {
+  PENDING
+  CONFIRMED
+  DECLINED
+  EXPIRED
+}
+
+enum ResponseStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  BOOKING_REMINDER
+  ROULETTE_MATCH
 }
 
 model User {
@@ -12,7 +49,7 @@ model User {
   email                   String    @unique
   firstName               String
   lastName                String
-  role                    String    @default("MBA_STUDENT") // FACULTY, STAFF, MBA_STUDENT
+  role                    Role      @default(MBA_STUDENT)
   title                   String?
   department              String?
   bio                     String?
@@ -54,7 +91,7 @@ model Slot {
   startTime       String   // "12:00"
   endTime         String   // "13:00"
   durationMinutes Int      @default(60)
-  type            String   @default("LUNCH") // LUNCH, COFFEE_CHAT
+  type            SlotType @default(LUNCH)
   isBooked        Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -63,47 +100,47 @@ model Slot {
 }
 
 model Booking {
-  id                 String    @id @default(uuid())
-  slotId             String    @unique
-  slot               Slot      @relation(fields: [slotId], references: [id], onDelete: Cascade)
-  bookerId           String
-  booker             User      @relation("BookerBookings", fields: [bookerId], references: [id])
-  hostId             String
-  host               User      @relation("HostBookings", fields: [hostId], references: [id])
-  boothNumber        Int       // 1-5
+  id                  String        @id @default(uuid())
+  slotId              String        @unique
+  slot                Slot          @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  bookerId            String
+  booker              User          @relation("BookerBookings", fields: [bookerId], references: [id])
+  hostId              String
+  host                User          @relation("HostBookings", fields: [hostId], references: [id])
+  boothNumber         Int           // 1-5
   bookerTalkingPoints String?
-  status             String    @default("CONFIRMED") // CONFIRMED, CANCELLED
-  cancelledBy        String?
-  cancelledAt        DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
+  status              BookingStatus @default(CONFIRMED)
+  cancelledBy         String?
+  cancelledAt         DateTime?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
 }
 
 model RouletteMatch {
-  id            String   @id @default(uuid())
+  id            String         @id @default(uuid())
   user1Id       String
-  user1         User     @relation("RouletteUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user1         User           @relation("RouletteUser1", fields: [user1Id], references: [id], onDelete: Cascade)
   user2Id       String
-  user2         User     @relation("RouletteUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+  user2         User           @relation("RouletteUser2", fields: [user2Id], references: [id], onDelete: Cascade)
   matchedSlotId String?
   boothNumber   Int?
   weekOf        DateTime
-  user1Status   String   @default("PENDING") // PENDING, ACCEPTED, DECLINED
-  user2Status   String   @default("PENDING")
-  status        String   @default("PENDING") // PENDING, CONFIRMED, DECLINED, EXPIRED
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  user1Status   ResponseStatus @default(PENDING)
+  user2Status   ResponseStatus @default(PENDING)
+  status        MatchStatus    @default(PENDING)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model Notification {
-  id                String   @id @default(uuid())
+  id                String           @id @default(uuid())
   userId            String
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type              String   // BOOKING_CONFIRMED, BOOKING_CANCELLED, BOOKING_REMINDER, ROULETTE_MATCH
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              NotificationType
   title             String
   message           String
   relatedBookingId  String?
   relatedRouletteId String?
-  isRead            Boolean  @default(false)
-  createdAt         DateTime @default(now())
+  isRead            Boolean          @default(false)
+  createdAt         DateTime         @default(now())
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUserId } from "@/lib/auth";
+import { BookingStatus } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest) {
       whereClause.slot = {
         date: { gte: new Date() },
       };
-      whereClause.status = "CONFIRMED";
+      whereClause.status = BookingStatus.CONFIRMED;
     }
 
     const bookings = await prisma.booking.findMany({

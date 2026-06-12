@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUserId } from "@/lib/auth";
+import { ResponseStatus, MatchStatus } from "@prisma/client";
 import { z } from "zod";
 
 const responseSchema = z.object({
@@ -45,7 +46,7 @@ export async function PUT(
 
     // Check if already responded
     const myCurrentStatus = isUser1 ? match.user1Status : match.user2Status;
-    if (myCurrentStatus !== "PENDING") {
+    if (myCurrentStatus !== ResponseStatus.PENDING) {
       return NextResponse.json(
         { error: "You have already responded to this match" },
         { status: 400 }
@@ -55,20 +56,23 @@ export async function PUT(
     const body = await request.json();
     const { response } = responseSchema.parse(body);
 
+    // Map string to enum
+    const responseEnum = response === "ACCEPTED" ? ResponseStatus.ACCEPTED : ResponseStatus.DECLINED;
+
     // Update the user's status
     const updateData = isUser1
-      ? { user1Status: response }
-      : { user2Status: response };
+      ? { user1Status: responseEnum }
+      : { user2Status: responseEnum };
 
     // Get the other user's status
     const otherStatus = isUser1 ? match.user2Status : match.user1Status;
 
     // Determine overall match status
-    let overallStatus = match.status;
-    if (response === "DECLINED") {
-      overallStatus = "DECLINED";
-    } else if (response === "ACCEPTED" && otherStatus === "ACCEPTED") {
-      overallStatus = "CONFIRMED";
+    let overallStatus: MatchStatus = match.status;
+    if (responseEnum === ResponseStatus.DECLINED) {
+      overallStatus = MatchStatus.DECLINED;
+    } else if (responseEnum === ResponseStatus.ACCEPTED && otherStatus === ResponseStatus.ACCEPTED) {
+      overallStatus = MatchStatus.CONFIRMED;
     }
 
     const updatedMatch = await prisma.rouletteMatch.update({

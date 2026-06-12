@@ -4,3 +4,4 @@ prisma/dev.db
 .env.local
 .env
 mockups.tar.gz
+.env

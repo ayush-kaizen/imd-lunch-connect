@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { addDays, startOfDay, endOfDay, format } from "date-fns";
 import { createNotification } from "@/lib/notifications";
+import { BookingStatus } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   // Verify cron secret (optional for local demo)
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
     // Get all confirmed bookings for tomorrow
     const bookings = await prisma.booking.findMany({
       where: {
-        status: "CONFIRMED",
+        status: BookingStatus.CONFIRMED,
         slot: {
           date: {
             gte: tomorrowStart,

@@ -1,11 +1,6 @@
 import { prisma } from "./prisma";
 import { format } from "date-fns";
-
-type NotificationType =
-  | "BOOKING_CONFIRMED"
-  | "BOOKING_CANCELLED"
-  | "BOOKING_REMINDER"
-  | "ROULETTE_MATCH";
+import { NotificationType } from "@prisma/client";
 
 interface CreateNotificationParams {
   userId: string;

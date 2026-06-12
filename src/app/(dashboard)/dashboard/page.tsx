@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { AvailableTodayToggle } from "./AvailableTodayToggle";
 import { USER_ROLES } from "@/lib/constants";
+import { BookingStatus, ResponseStatus } from "@prisma/client";
 
 // Avatar colors from mockup
 const AVATAR_COLORS = [
@@ -43,7 +44,7 @@ async function getDashboardData(userId: string) {
   const upcomingBookings = await prisma.booking.findMany({
     where: {
       OR: [{ hostId: user.id }, { bookerId: user.id }],
-      status: "CONFIRMED",
+      status: BookingStatus.CONFIRMED,
       slot: { date: { gte: today } },
     },
     include: {
@@ -59,7 +60,7 @@ async function getDashboardData(userId: string) {
   const pastBookingsCount = await prisma.booking.count({
     where: {
       OR: [{ hostId: user.id }, { bookerId: user.id }],
-      status: "CONFIRMED",
+      status: BookingStatus.CONFIRMED,
       slot: { date: { lt: today } },
     },
   });
@@ -68,8 +69,8 @@ async function getDashboardData(userId: string) {
   const currentMatch = await prisma.rouletteMatch.findFirst({
     where: {
       OR: [
-        { user1Id: user.id, user1Status: "PENDING" },
-        { user2Id: user.id, user2Status: "PENDING" },
+        { user1Id: user.id, user1Status: ResponseStatus.PENDING },
+        { user2Id: user.id, user2Status: ResponseStatus.PENDING },
       ],
     },
     include: {

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Role, SlotType, BookingStatus, MatchStatus, ResponseStatus, NotificationType } from "@prisma/client";
 import { addDays, setHours, setMinutes, startOfWeek, subWeeks } from "date-fns";
 
 const prisma = new PrismaClient();
@@ -269,13 +269,13 @@ const mbaStudents = [
   },
 ];
 
-function getTimeSlots() {
+function getTimeSlots(): { start: string; end: string; duration: number; type: SlotType }[] {
   return [
-    { start: "11:45", end: "12:45", duration: 60, type: "LUNCH" },
-    { start: "12:00", end: "13:00", duration: 60, type: "LUNCH" },
-    { start: "12:30", end: "13:30", duration: 60, type: "LUNCH" },
-    { start: "15:00", end: "15:30", duration: 30, type: "COFFEE_CHAT" },
-    { start: "15:30", end: "16:00", duration: 30, type: "COFFEE_CHAT" },
+    { start: "11:45", end: "12:45", duration: 60, type: SlotType.LUNCH },
+    { start: "12:00", end: "13:00", duration: 60, type: SlotType.LUNCH },
+    { start: "12:30", end: "13:30", duration: 60, type: SlotType.LUNCH },
+    { start: "15:00", end: "15:30", duration: 30, type: SlotType.COFFEE_CHAT },
+    { start: "15:30", end: "16:00", duration: 30, type: SlotType.COFFEE_CHAT },
   ];
 }
 
@@ -290,7 +290,7 @@ async function main() {
   await prisma.userInterestTag.deleteMany();
   await prisma.user.deleteMany();
 
-  const createdUsers: { id: string; role: string; firstName: string; lastName: string }[] = [];
+  const createdUsers: { id: string; role: Role; firstName: string; lastName: string }[] = [];
   const today = new Date();
   const timeSlots = getTimeSlots();
 
@@ -302,7 +302,7 @@ async function main() {
         email: f.email,
         firstName: f.firstName,
         lastName: f.lastName,
-        role: "FACULTY",
+        role: Role.FACULTY,
         title: f.title,
         department: "Faculty",
         bio: f.bio,
@@ -313,7 +313,7 @@ async function main() {
         },
       },
     });
-    createdUsers.push({ id: user.id, role: "FACULTY", firstName: user.firstName, lastName: user.lastName });
+    createdUsers.push({ id: user.id, role: Role.FACULTY, firstName: user.firstName, lastName: user.lastName });
   }
 
   // Create Staff
@@ -324,7 +324,7 @@ async function main() {
         email: s.email,
         firstName: s.firstName,
         lastName: s.lastName,
-        role: "STAFF",
+        role: Role.STAFF,
         title: s.title,
         department: "Administration",
         bio: s.bio,
@@ -335,7 +335,7 @@ async function main() {
         },
       },
     });
-    createdUsers.push({ id: user.id, role: "STAFF", firstName: user.firstName, lastName: user.lastName });
+    createdUsers.push({ id: user.id, role: Role.STAFF, firstName: user.firstName, lastName: user.lastName });
   }
 
   // Create MBA Students
@@ -346,7 +346,7 @@ async function main() {
         email: s.email,
         firstName: s.firstName,
         lastName: s.lastName,
-        role: "MBA_STUDENT",
+        role: Role.MBA_STUDENT,
         title: s.title,
         department: "MBA Program",
         bio: s.bio,
@@ -358,7 +358,7 @@ async function main() {
         },
       },
     });
-    createdUsers.push({ id: user.id, role: "MBA_STUDENT", firstName: user.firstName, lastName: user.lastName });
+    createdUsers.push({ id: user.id, role: Role.MBA_STUDENT, firstName: user.firstName, lastName: user.lastName });
   }
 
   console.log(`✅ Created ${createdUsers.length} users`);
@@ -420,7 +420,7 @@ async function main() {
         bookerId: booker.id,
         boothNumber: (i % 5) + 1,
         bookerTalkingPoints: i % 2 === 0 ? "Looking forward to discussing career transitions and leadership." : undefined,
-        status: "CONFIRMED",
+        status: BookingStatus.CONFIRMED,
       },
       include: {
         host: true,
@@ -438,7 +438,7 @@ async function main() {
     await prisma.notification.create({
       data: {
         userId: slot.hostId,
-        type: "BOOKING_CONFIRMED",
+        type: NotificationType.BOOKING_CONFIRMED,
         title: `Lunch confirmed with ${booker.firstName} ${booker.lastName}`,
         message: `Your lunch meeting is confirmed. You'll meet at Booth ${booking.boothNumber} in the Hub.`,
         relatedBookingId: booking.id,
@@ -461,9 +461,9 @@ async function main() {
       user1Id: createdUsers[0].id,
       user2Id: createdUsers[5].id,
       weekOf: lastWeek,
-      user1Status: "ACCEPTED",
-      user2Status: "ACCEPTED",
-      status: "CONFIRMED",
+      user1Status: ResponseStatus.ACCEPTED,
+      user2Status: ResponseStatus.ACCEPTED,
+      status: MatchStatus.CONFIRMED,
       boothNumber: 3,
     },
   });
@@ -474,9 +474,9 @@ async function main() {
       user1Id: createdUsers[2].id,
       user2Id: createdUsers[8].id,
       weekOf: weekStart,
-      user1Status: "PENDING",
-      user2Status: "PENDING",
-      status: "PENDING",
+      user1Status: ResponseStatus.PENDING,
+      user2Status: ResponseStatus.PENDING,
+      status: MatchStatus.PENDING,
     },
   });
 
@@ -484,7 +484,7 @@ async function main() {
   await prisma.notification.create({
     data: {
       userId: createdUsers[2].id,
-      type: "ROULETTE_MATCH",
+      type: NotificationType.ROULETTE_MATCH,
       title: `Lunch Roulette: You matched with ${createdUsers[8].firstName}!`,
       message: `The wheel has spoken! Check your Lunch Roulette page to accept or decline.`,
       relatedRouletteId: pendingMatch.id,
@@ -494,7 +494,7 @@ async function main() {
   await prisma.notification.create({
     data: {
       userId: createdUsers[8].id,
-      type: "ROULETTE_MATCH",
+      type: NotificationType.ROULETTE_MATCH,
       title: `Lunch Roulette: You matched with ${createdUsers[2].firstName}!`,
       message: `The wheel has spoken! Check your Lunch Roulette page to accept or decline.`,
       relatedRouletteId: pendingMatch.id,
@@ -507,9 +507,9 @@ async function main() {
       user1Id: createdUsers[10].id,
       user2Id: createdUsers[15].id,
       weekOf: subWeeks(weekStart, 2),
-      user1Status: "ACCEPTED",
-      user2Status: "DECLINED",
-      status: "DECLINED",
+      user1Status: ResponseStatus.ACCEPTED,
+      user2Status: ResponseStatus.DECLINED,
+      status: MatchStatus.DECLINED,
     },
   });
 
@@ -524,7 +524,7 @@ async function main() {
     await prisma.notification.create({
       data: {
         userId: ayush.id,
-        type: "BOOKING_REMINDER",
+        type: NotificationType.BOOKING_REMINDER,
         title: "Reminder: Lunch tomorrow with David Bach",
         message: "You have a lunch meeting tomorrow at 12:00 PM at Booth 2 in the Hub.",
         isRead: true,
